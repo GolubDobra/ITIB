@@ -6,8 +6,8 @@ values = {1: '1', -1: '0'}
 use = {'1': 1, '0': -1}
 modelHeight = 5
 modelWidth = 3
-models = 'known_shapes'
-test_model = 'test_shapes/testShapes.txt'
+models = 'models'
+test_model = 'test/testModel.txt'
 SIZE = 32
 
 def FuncActiv(net, y):
