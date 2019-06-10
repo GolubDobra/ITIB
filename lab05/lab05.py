@@ -2,22 +2,13 @@ from os.path import isfile
 import numpy as np
 import os
 
-values = {1: '1', -1: '0'}
-use = {'1': 1, '0': -1}
+models = 'models'    
+test_model = 'test/testModel.txt'
+sizeofvect = 32
 modelHeight = 5
 modelWidth = 3
-models = 'models'
-test_model = 'test/testModel.txt'
-SIZE = 32
-
-def FuncActiv(net, y):
-    if net > 0:
-        return 1
-    elif net == 0:
-        return 0
-    else:
-        return -1
-
+values = {1: '1', -1: '0'}
+use = {'1': 1, '0': -1}
 class NS_Hopfield:
     def __init__(self, height, width):
         self.models = []
@@ -35,11 +26,18 @@ class NS_Hopfield:
                     self.w[i][j] = 0
                 else:
                     self.w[i][j] += x[i] * x[j]
-
+    def FuncActiv(self, net, y):
+        if net > 0:
+            return 1
+        elif net == 0:
+            return 0
+        else:
+            return -1
+    
     def net(self, x):
         for i in range(self.n):
-            net_y = sum([self.w[j][i] * x[j] for j in range(self.n)])
-            y = FuncActiv(net_y, x[i])
+            net_y = sum([self.w[j][i] * x[j] for j in range(self.n-1)]) + sum([self.w[j][i] * x[j] for j in range(self.n)])
+            y = self.FuncActiv(net_y, x[i])
             if y != x[i] and y != 0:
                 print("Изменение нейрона №%d с %d на %d" %(i,x[i],y))
                 x[i] = y
@@ -47,6 +45,9 @@ class NS_Hopfield:
             print("Распознования не произошло!")
             return 0
         return x
+        
+    models = 'models'
+    test_model = 'test/testModel.txt'
 
     def parse(self, directory):
         shapes_files = []
@@ -62,7 +63,7 @@ class NS_Hopfield:
 
     def parseModel(self, path):
         with open(path) as f:
-            model = f.read(SIZE)
+            model = f.read(sizeofvect)
             model = model.replace("\n", "")
             model = model.replace("\r", "")
             models = []
